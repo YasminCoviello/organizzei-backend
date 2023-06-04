@@ -44,8 +44,35 @@ const Task = db.define("tasks", {
   }
 });
 
+const User = db.define("users", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  imgSrc: {
+    type: DataTypes.STRING,
+  }
+});
+
 Task.belongsTo(List, { foreignkey: { name: 'listId', allowNull: false }, onDelete: 'CASCADE' });
 List.hasMany(Task);
 
+List.belongsTo(User, { foreignkey: { name: 'userId', allowNull: false }, onDelete: 'CASCADE' });
+User.hasMany(List);
 
-module.exports = { Task, List, TASK_STATES };
+
+
+module.exports = { Task, List, User, TASK_STATES };
