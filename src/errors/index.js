@@ -15,3 +15,12 @@ exports.NotFoundError = class NotFoundError extends Error {
     this.code = 404;
   }
 }
+
+exports.UnauthorizedError = class UnauthorizedError extends Error {
+  constructor(message) {
+    super(message);
+
+    this.message = message;
+    this.code = 401;
+  }
+}

@@ -5,15 +5,15 @@ const ListService = require("./list.service");
 
 const TaskService = {
   create: async function(listId, body) {
-    const { title, description, date } = body;
+    const { title, description, date, user } = body;
 
     if(!title) throw new BadRequestError('Title is required');
 
-    const list = await ListService.findOne(listId);
+    const list = await ListService.findOne(listId, user.id);
 
     return await Task.create({ title, description, date, listId: list.id, currentColumn: 'TODO' });
   },
-  findAll: async function(listId, date) {
+  findAll: async function(listId, date, userId) {
     const startDate = new Date(date);
     const endDate = new Date(date);
 
@@ -21,9 +21,11 @@ const TaskService = {
     endDate.setMinutes(59);
     endDate.setSeconds(59);
 
+    const list = await ListService.findOne(listId, userId);
+
     const tasks = await Task.findAll({ 
       where: { 
-        listId,
+        listId: list.id,
         date: {
           [Op.between]: [startDate, endDate]
         }
@@ -34,12 +36,16 @@ const TaskService = {
     });
     return tasks;
   },
-  delete: async function(listId, id) {
-    const deleteCount = await Task.destroy({ where: { listId, id } });
+  delete: async function(listId, id, userId) {
+    const list = await ListService.findOne(listId, userId);
+
+    const deleteCount = await Task.destroy({ where: { listId: list.id, id } });
     if(deleteCount === 0) throw new NotFoundError('Task not found');
   },
-  advance: async function(listId, id) {
-    const task = await Task.findOne({ where: { id, listId } });
+  advance: async function(listId, id, userId) {
+    const list = await ListService.findOne(listId, userId);
+
+    const task = await Task.findOne({ where: { id, listId: list.id } });
 
     if(!task) throw new NotFoundError(`Task with id ${id} wasn't found.`);
 
@@ -54,8 +60,10 @@ const TaskService = {
 
     return updatedTask;
   },
-  return: async function(listId, id) {
-    const task = await Task.findOne({ where: { id, listId } });
+  return: async function(listId, id, userId) {
+    const list = await ListService.findOne(listId, userId);
+
+    const task = await Task.findOne({ where: { id, listId: list.id } });
 
     if(!task) throw new NotFoundError(`Task with id ${id} wasn't found.`);
 

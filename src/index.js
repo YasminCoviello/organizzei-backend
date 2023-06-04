@@ -4,6 +4,7 @@ const { db } = require('./db');
 const TaskController = require('./controllers/task.controller');
 const ListController = require('./controllers/list.controller');
 const UserController = require('./controllers/user.controller');
+const authMiddleware = require('./middlewares/auth-middleware');
 
 const port = 4000;
 
@@ -22,6 +23,8 @@ db.sync().then(() => {
 }).catch((error) => {
   console.error('Unable to create table : ', error);
 });
+
+app.use('/list', authMiddleware);
 
 // List
 app.post('/list', ListController.create);
@@ -42,7 +45,6 @@ app.post('/user/register', UserController.register);
 app.post('/user/login', UserController.login);
 app.post('/user/recover-password', UserController.recoverPassword);
 app.post('/user/update-password', UserController.updatePassword);
-
 
 app.listen(port, () => {
   console.log('Tá funcionando, hein? http://localhost:' + port);

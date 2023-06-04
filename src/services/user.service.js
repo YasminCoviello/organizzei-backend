@@ -3,13 +3,13 @@ const { User } = require("../models");
 
 const UserService = {
   register: async function(body) {
-    const { name, email, password } = body;
+    const { name, email, password, imgSrc } = body;
 
     if(!name) throw new BadRequestError('Name is required');
     if(!email) throw new BadRequestError('Email is required');
     if(!password) throw new BadRequestError('Password is required');
 
-    return await User.create({ name, email, password });
+    return await User.create({ name, email, password, imgSrc });
   },
 
   login: async function(body) {
@@ -49,32 +49,7 @@ const UserService = {
     if(!user) throw new NotFoundError(`User not found`);
 
     await User.update({ password: newPassword }, { where: { email }});
-    
   },
-
-  findAll: async function() {
-    return await User.findAll();
-  },
-  findOne: async function(id) {
-    const user = await User.findOne({ where: { id } });
-    
-    if(!user) throw new NotFoundError(`User with id ${id} wasn't found`);
-
-    return user;
-  },
-  delete: async function(id) {
-    const deletedCounter = await List.destroy({ where: { id } });
-    if(deletedCounter === 0) throw new NotFoundError(`User with id ${id} wasn't found`);
-  },
-  update: async function(id, fields) {
-    const updateCounter = await User.update(fields, { where: { id } });
-    
-    if(updateCounter === 0) throw new NotFoundError(`User with id ${id} wasn't found`);
-
-    const user = await User.findOne({ where: { id } });
-
-    return user;
-  }
 }
 
 module.exports = UserService;

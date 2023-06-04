@@ -7,15 +7,15 @@ const ListController = Controller({
     res.status(201).send(response);
   },
   findAll: async function(req, res) {
-    const response = await ListService.findAll();
+    const response = await ListService.findAll(req.body.user);
     res.status(200).send(response);
   },
   findOne: async function(req, res) {
-    const response = await ListService.findOne(req.params.id);
+    const response = await ListService.findOne(req.params.id, req.body.user.id);
     res.status(200).send(response);
   },
   delete: async function(req, res) {
-    await ListService.delete(req.params.id);
+    await ListService.delete(req.params.id, req.body.user.id);
     res.status(204).send({ message: 'List deleted successfully.' });
   },
   update: async function(req, res) {

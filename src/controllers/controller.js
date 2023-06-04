@@ -6,8 +6,6 @@ function Controller(controller) {
       try {
         return await method(req, res, next);
       } catch(e) {
-        console.log(e);
-        
         if(e.code) {
           res.status(e.code).send({ message: e.message });
         } else {
