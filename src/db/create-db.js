@@ -1,6 +1,6 @@
-const { List, Task } = require('../models');
+const { List, Task, User } = require('../models');
 
-const models = [List, Task];
+const models = [User, List, Task];
 
 const syncModels = models.map(model => model.sync());
 

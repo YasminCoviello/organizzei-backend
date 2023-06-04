@@ -3,6 +3,7 @@ const cors = require('cors');
 const { db } = require('./db');
 const TaskController = require('./controllers/task.controller');
 const ListController = require('./controllers/list.controller');
+const UserController = require('./controllers/user.controller');
 
 const port = 4000;
 
@@ -35,6 +36,13 @@ app.get('/list/:listId/task', TaskController.findAll);
 app.delete('/list/:listId/task/:id', TaskController.delete);
 app.put('/list/:listId/task/:id/advance', TaskController.advance);
 app.put('/list/:listId/task/:id/return', TaskController.return);
+
+//User
+app.post('/user/register', UserController.register);
+app.post('/user/login', UserController.login);
+app.post('/user/recover-password', UserController.recoverPassword);
+app.post('/user/update-password', UserController.updatePassword);
+
 
 app.listen(port, () => {
   console.log('Tá funcionando, hein? http://localhost:' + port);
