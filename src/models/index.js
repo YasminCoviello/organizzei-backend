@@ -60,7 +60,8 @@ const User = db.define("users", {
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   imgSrc: {
     type: DataTypes.STRING,
@@ -72,7 +73,5 @@ List.hasMany(Task);
 
 List.belongsTo(User, { foreignkey: { name: 'userId', allowNull: false }, onDelete: 'CASCADE' });
 User.hasMany(List);
-
-
 
 module.exports = { Task, List, User, TASK_STATES };
